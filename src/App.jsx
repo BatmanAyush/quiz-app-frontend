@@ -1,7 +1,6 @@
 import Login from "./Login";
 import { Routes, Route } from 'react-router-dom';
 import TitleChoosing from "./quizCreation/titleChoosing";
-import QuizQuestion from "./quizCreation/QuizCreator";
 import Home from "./Home";
 import TitleList from "./getQuiz/TitleList";
 import HomePage from "./HomePage";
