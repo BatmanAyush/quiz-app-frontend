@@ -141,7 +141,7 @@ export default function QuizCreator({ passTitle, quizId }) {
     const token = localStorage.getItem("jwt");
 
     try {
-      const res = await fetch(`http://localhost:8081/quiz/${quizId}/saveQuestions`, {
+      const res = await fetch(`https://quiz-app-backend-uk30.onrender.com/quiz/${quizId}/saveQuestions`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

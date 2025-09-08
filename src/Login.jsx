@@ -63,7 +63,7 @@ export default function Login() {
     event.preventDefault();
     const reqBody = { name: name.toLowerCase(), password };
     try {
-      const response = await fetch("http://localhost:8081/login", {
+      const response = await fetch("https://quiz-app-backend-uk30.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reqBody),
@@ -96,7 +96,7 @@ export default function Login() {
         {/* --- NEW: Google Login Button --- */}
         <div className="mt-6">
           <a
-            href="http://localhost:8081/oauth2/authorization/google"
+            href="https://quiz-app-backend-uk30.onrender.com/oauth2/authorization/google"
             className="w-full flex items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white text-gray-700 font-medium py-2.5 hover:bg-gray-50 transition
                        focus:outline-none focus:ring-2 focus:ring-gray-900/10"
           >

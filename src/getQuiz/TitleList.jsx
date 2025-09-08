@@ -62,7 +62,7 @@ export default function TitleList() {
         return
       }
       try {
-        const response = await fetch("http://localhost:8081/checkToken", {
+        const response = await fetch("https://quiz-app-backend-uk30.onrender.com/checkToken", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,7 +92,7 @@ export default function TitleList() {
 
       try {
         // 1) Fetch quizzes
-        const response = await fetch("http://localhost:8081/getTitle", {
+        const response = await fetch("https://quiz-app-backend-uk30.onrender.com/getTitle", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -115,7 +115,7 @@ export default function TitleList() {
             let questionsCount = 0
             let difficulty = "Easy"
             try {
-              const res = await fetch(`http://localhost:8081/${quiz.id}/getQuestions`, {
+              const res = await fetch(`https://quiz-app-backend-uk30.onrender.com/${quiz.id}/getQuestions`, {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
               })
@@ -199,7 +199,7 @@ export default function TitleList() {
     const token = localStorage.getItem("jwt")
 
     try {
-      const response = await fetch(`http://localhost:8081/${quizId}/getQuestions`, {
+      const response = await fetch(`https://quiz-app-backend-uk30.onrender.com/${quizId}/getQuestions`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -224,7 +224,7 @@ export default function TitleList() {
     const token = localStorage.getItem("jwt")
     
     try {
-      const response = await fetch(`http://localhost:8081/quiz/${quizId}/delete`, {
+      const response = await fetch(`https://quiz-app-backend-uk30.onrender.com/quiz/${quizId}/delete`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       })
