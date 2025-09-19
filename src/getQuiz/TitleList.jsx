@@ -62,7 +62,7 @@ export default function TitleList() {
         return
       }
       try {
-        const response = await fetch("https://quiz-app-backend-uk30.onrender.com/checkToken", {
+        const response = await fetch("https://15-207-151-132.nip.io/checkToken", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,7 +92,7 @@ export default function TitleList() {
 
       try {
         // 1) Fetch quizzes
-        const response = await fetch("https://quiz-app-backend-uk30.onrender.com/getTitle", {
+        const response = await fetch("https://15-207-151-132.nip.io/getTitle", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -115,17 +115,18 @@ export default function TitleList() {
             let questionsCount = 0
             let difficulty = "Easy"
             try {
-              const res = await fetch(`https://quiz-app-backend-uk30.onrender.com/${quiz.id}/getQuestions`, {
+              const res = await fetch(`https://15-207-151-132.nip.io/${quiz.id}/getQuestions`, {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
               })
               if (res.ok) {
                 const userQuiz = await res.json()
                 questionsCount = Array.isArray(userQuiz) ? userQuiz.length : 0
+                console.log('QUESTIONS'+questionsCount)
                 difficulty = Array.isArray(quizzes) ? quiz.difficulty : "Easy"
               }
             } catch {
-              // ignore per-quiz failure, keep 0 count
+             
             }
 
             // mock/derived fields (keep or remove as needed)
@@ -199,7 +200,7 @@ export default function TitleList() {
     const token = localStorage.getItem("jwt")
 
     try {
-      const response = await fetch(`https://quiz-app-backend-uk30.onrender.com/${quizId}/getQuestions`, {
+      const response = await fetch(`https://15-207-151-132.nip.io/${quizId}/getQuestions`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -224,7 +225,7 @@ export default function TitleList() {
     const token = localStorage.getItem("jwt")
     
     try {
-      const response = await fetch(`https://quiz-app-backend-uk30.onrender.com/quiz/${quizId}/delete`, {
+      const response = await fetch(`https://15-207-151-132.nip.io/quiz/${quizId}/delete`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -356,7 +357,7 @@ export default function TitleList() {
     console.log("Helo")
     return <SessionTimeout onLogin={()=>navigate("/login")} />
   }
-
+  console.log(filteredList)
   return (
     <div className="min-h-screen w-full bg-white text-gray-900">
       <AnimatePresence mode="wait">

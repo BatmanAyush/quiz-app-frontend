@@ -93,7 +93,7 @@ export default function TitleChoosing() {
         return
       }
       try {
-        const response = await fetch("https://quiz-app-backend-uk30.onrender.com/checkToken", {
+        const response = await fetch("https://15-207-151-132.nip.io/checkToken", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -122,7 +122,7 @@ export default function TitleChoosing() {
 
     try {
       const token = localStorage.getItem("jwt")
-      const res = await fetch("https://quiz-app-backend-uk30.onrender.com/quiz/saveTitle", {
+      const res = await fetch("https://15-207-151-132.nip.io/quiz/saveTitle", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
