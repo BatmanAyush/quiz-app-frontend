@@ -41,7 +41,6 @@ const ShowEye = () => (
   </svg>
 );
 
-// NEW: Google Icon for the login button
 const GoogleIcon = () => (
     <svg className="w-5 h-5" aria-hidden="true" viewBox="0 0 24 24">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
@@ -52,16 +51,38 @@ const GoogleIcon = () => (
     </svg>
 );
 
+const LoadingSpinner = () => (
+  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+    <circle 
+      className="opacity-25" 
+      cx="12" 
+      cy="12" 
+      r="10" 
+      stroke="currentColor" 
+      strokeWidth="4"
+    />
+    <path 
+      className="opacity-75" 
+      fill="currentColor" 
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+    />
+  </svg>
+);
 
 export default function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [hid, setHid] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(event) {
+    console.log('login try');
     event.preventDefault();
-    const reqBody = { name: name.toLowerCase(), password };
+    setIsLoading(true);
+    
+    const reqBody = { name: name.toLowerCase(), password: password };
+    
     try {
       const response = await fetch("https://15-207-151-132.nip.io/login", {
         method: "POST",
@@ -69,14 +90,17 @@ export default function Login() {
         body: JSON.stringify(reqBody),
       });
       const result = await response.json();
+      
       if (response.ok && result.token) {
         localStorage.setItem("jwt", result.token);
         navigate("/home");
       } else {
         console.error("Login failed:", result);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Error during POST request:", error);
+      setIsLoading(false);
     }
   }
 
@@ -93,7 +117,6 @@ export default function Login() {
           Welcome back. Please enter your details.
         </p>
 
-        {/* --- NEW: Google Login Button --- */}
         <div className="mt-6">
           <a
             href="https://15-207-151-132.nip.io/oauth2/authorization/google"
@@ -105,16 +128,13 @@ export default function Login() {
           </a>
         </div>
 
-        {/* --- NEW: Visual Separator --- */}
         <div className="mt-6 flex items-center">
           <div className="flex-grow h-px bg-gray-100"></div>
           <span className="mx-4 text-xs text-gray-400 font-medium">OR</span>
           <div className="flex-grow h-px bg-gray-100"></div>
         </div>
 
-        {/* --- Existing Manual Login Form --- */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-          {/* Name */}
           <div className="space-y-2">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Name
@@ -126,12 +146,13 @@ export default function Login() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
+              disabled={isLoading}
               className="block w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-gray-900 placeholder:text-gray-400 shadow-xs
-                         focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition"
+                         focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition
+                         disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
-          {/* Password */}
           <div className="space-y-2">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
@@ -144,14 +165,18 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
+                disabled={isLoading}
                 className="block w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 pr-12 text-gray-900 placeholder:text-gray-400 shadow-xs
-                           focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition"
+                           focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition
+                           disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <button
                 type="button"
                 onClick={() => setHid(!hid)}
+                disabled={isLoading}
                 aria-label={hid ? "Show password" : "Hide password"}
-                className="absolute inset-y-0 right-3 my-auto inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
+                className="absolute inset-y-0 right-3 my-auto inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900/10
+                           disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {hid ? <ShowEye /> : <HidEye />}
               </button>
@@ -160,10 +185,20 @@ export default function Login() {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full rounded-xl bg-gray-900 text-white font-medium py-2.5 hover:bg-black transition
-                       focus:outline-none focus:ring-2 focus:ring-gray-900/10"
+                       focus:outline-none focus:ring-2 focus:ring-gray-900/10
+                       disabled:opacity-50 disabled:cursor-not-allowed
+                       flex items-center justify-center gap-2"
           >
-            Sign in
+            {isLoading ? (
+              <>
+                <LoadingSpinner />
+                <span>Signing in...</span>
+              </>
+            ) : (
+              <span>Sign in</span>
+            )}
           </button>
         </form>
 

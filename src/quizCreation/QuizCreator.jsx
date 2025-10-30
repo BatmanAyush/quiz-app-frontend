@@ -87,7 +87,12 @@ export default function QuizCreator({ passTitle, quizId }) {
       const next = [...prev];
       const q = next[qi];
       if (!q) return prev;
-      const choices = q.choices.map((c, i) => ({ ...c, correct: i === ci }));
+      const choices = q.choices.map((choice,index)=>{
+        if(index===ci){
+          return {...choice,correct:!choice.correct}
+        }
+        return choice;
+      })
       next[qi] = { ...q, choices };
       return next;
     });
@@ -283,6 +288,7 @@ export default function QuizCreator({ passTitle, quizId }) {
                             choice.correct ? "border-emerald-500" : "border-gray-300"
                           }`}
                         >
+                        
                           <span
                             className={`h-3.5 w-3.5 rounded-full transition ${
                               choice.correct ? "bg-emerald-500" : "bg-transparent"

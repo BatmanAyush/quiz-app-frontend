@@ -180,7 +180,7 @@ export default function TitleChoosing() {
 
   if (sessionState === "expired") {
     console.log("Helo")
-    return <SessionTimeout onLogin={navigate("/login")} onRetry={window.location.reload()} />
+    return <SessionTimeout onLogin={() => navigate("/login")} onRetry={() => window.location.reload()} />
   }
 
   // ---- Main ----

@@ -30,14 +30,23 @@ export default function UserQuiz({ userQuestions, onBack }) {
   const [score, setScore] = useState(0)
 
   console.log(checkedQuestions)
+  console.log(selectedAnswers)
   const questions = userQuestions || []
 
   const handleAnswerSelect = (answerIndex) => {
     if (checkedQuestions[currentQuestion]) return
-
+    const arr = selectedAnswers[currentQuestion] || []
+    let newSelections;
+    if(arr.includes(answerIndex)){
+        newSelections = arr.filter((i)=> i!=answerIndex)
+    }
+    else{
+      newSelections = [...arr,answerIndex]
+    }
+  
     setSelectedAnswers({
       ...selectedAnswers,
-      [currentQuestion]: answerIndex,
+      [currentQuestion]: newSelections,
     })
   }
 
@@ -62,17 +71,51 @@ export default function UserQuiz({ userQuestions, onBack }) {
     }
   }
 
-  const calculateScore = () => {
-    let correctAnswers = 0
-    questions.forEach((question, questionIndex) => {
-      const selectedChoiceIndex = selectedAnswers[questionIndex]
-      if (selectedChoiceIndex !== undefined && question.choices[selectedChoiceIndex]?.correct) {
-        correctAnswers++
-      }
-    })
-    setScore(Math.round((correctAnswers / questions.length) * 100))
-    setShowResults(true)
-  }
+
+
+
+const calculateScore = () => {
+  let correctAnswers = 0;
+  questions.forEach((question, questionIndex) => {
+
+    const correctChoiceIndices = question.choices
+      .map((choice, index) => (choice.correct ? index : -1))
+      .filter((index) => index !== -1);
+
+
+    const userSelectedIndices = selectedAnswers[questionIndex] || [];
+
+
+
+    const sortedCorrect = [...correctChoiceIndices].sort();
+    const sortedUser = [...userSelectedIndices].sort();
+
+
+    if (JSON.stringify(sortedCorrect) === JSON.stringify(sortedUser)) {
+      correctAnswers++;
+    }
+  });
+
+  setScore(questions.length > 0 ? Math.round((correctAnswers / questions.length) * 100) : 0);
+  setShowResults(true);
+};
+
+// We also need to update the helper for the results screen.
+const getCorrectAnswersCount = () => {
+  return Object.entries(selectedAnswers).filter(([questionIndex, userChoices]) => {
+      const question = questions[Number.parseInt(questionIndex)];
+      if (!question) return false;
+      
+      const correctChoices = question.choices
+        .map((c, i) => (c.correct ? i : -1))
+        .filter(i => i !== -1);
+
+      // Same comparison logic
+      const sortedCorrect = [...correctChoices].sort();
+      const sortedUser = [...(userChoices || [])].sort();
+      return JSON.stringify(sortedCorrect) === JSON.stringify(sortedUser);
+  }).length;
+};
 
   const resetQuiz = () => {
     setCurrentQuestion(0)
@@ -82,12 +125,7 @@ export default function UserQuiz({ userQuestions, onBack }) {
     setScore(0)
   }
 
-  const getCorrectAnswersCount = () => {
-    return Object.entries(selectedAnswers).filter(([questionIndex, choiceIndex]) => {
-      const question = questions[Number.parseInt(questionIndex)]
-      return question?.choices[choiceIndex]?.correct
-    }).length
-  }
+
 
   if (showResults) {
     const correctCount = getCorrectAnswersCount()
@@ -213,10 +251,12 @@ export default function UserQuiz({ userQuestions, onBack }) {
 
             <motion.div variants={staggerContainer} initial="hidden" animate="show" className="space-y-3">
               {questions[currentQuestion]?.choices?.map((choice, index) => {
-                const isSelected = selectedAnswers[currentQuestion] === index
+                // console.log(selectedAnswers[currentQuestion] )
+                const isSelected = selectedAnswers[currentQuestion]?.includes(index)
+                console.log(isSelected) 
                 const isChecked = checkedQuestions[currentQuestion]
                 const isCorrect = choice.correct
-                // console.log(choice)
+                console.log(choice)
                 let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all "
 
                 if (isChecked) {
